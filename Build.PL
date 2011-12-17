@@ -5,21 +5,26 @@ use Module::Build;
 
 my $builder = Module::Build->new(
 	module_name         => 'Business::CyberSource::Report',
-	license             => 'perl',
+	license             => 'artistic',
 	dist_author         => q{Guillaume Aubert <aubertg@cpan.org>},
 	dist_version_from   => 'lib/Business/CyberSource/Report.pm',
 	build_requires      =>
 	{
-		'Test::More'     => 0,
-		'XML::LibXML'    => 0,
-		'LWP::UserAgent' => 0,
-		'HTTP::Request'  => 0,
+		'HTTP::Request'         => 0,
+		'HTTP::Request::Common' => 0,
+		'LWP::UserAgent'        => 0,
+		'Scalar::Util'          => 0,
+		'Test::More'            => 0,
+		'XML::LibXML'           => 0,
 	},
-	requires =>
+	requires            =>
 	{
-		'perl' => 5.006,
+		'perl'                  => 5.006,
 	},
-	add_to_cleanup      => [ 'Business-CyberSource-Report-*' ],
+	add_to_cleanup      =>
+	[
+		'Business-CyberSource-Report-*',
+	],
 	create_makefile_pl  => 'traditional',
 );
 
