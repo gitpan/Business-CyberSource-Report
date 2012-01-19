@@ -5,6 +5,7 @@ use warnings;
 
 use base 'Business::CyberSource::Report';
 
+use Carp;
 use HTTP::Request::Common qw();
 use LWP::UserAgent qw();
 
@@ -17,11 +18,11 @@ Single Transaction report.
 
 =head1 VERSION
 
-Version 1.1.1
+Version 1.1.2
 
 =cut
 
-our $VERSION = '1.1.1';
+our $VERSION = '1.1.2';
 
 our $TEST_URL = 'https://ebctest.cybersource.com/ebctest/Query';
 our $PRODUCTION_URL = 'https://ebc.cybersource.com/ebc/Query';
@@ -124,15 +125,15 @@ sub retrieve
 	my $version = delete( $args{'version'} ) || '1.7';
 	
 	# Verify the version number.
-	die 'The version number can only be 1.1, 1.2, 1.3, 1.4, 1.5, 1.6 or 1.7'
+	croak 'The version number can only be 1.1, 1.2, 1.3, 1.4, 1.5, 1.6 or 1.7'
 		unless $version =~ m/^1\.[1-7]$/;
 	
 	# Verify the value of $include_extended_detail.
 	if ( defined( $include_extended_detail ) )
 	{
-		die "The value of 'include_extended_detail' needs to be either 'Predecessor' or 'Related'"
-			if $include_extended_detail !~ m/^(Predecessor|Related)$/;
-		die "'include_extended_detail' is only available for versions >= 1.3"
+		croak "The value of 'include_extended_detail' needs to be either 'Predecessor' or 'Related'"
+			if $include_extended_detail !~ m/^(?:Predecessor|Related)$/;
+		croak "'include_extended_detail' is only available for versions >= 1.3"
 			if $version < 1.3;
 	}
 	
@@ -154,7 +155,7 @@ sub retrieve
 	}
 	elsif ( !defined( $request_id ) && defined( $merchant_reference_number ) && defined( $target_date ) )
 	{
-		die 'The target_date format must be YYYYMMDD'
+		croak 'The target_date format must be YYYYMMDD'
 			unless $target_date =~ m/^\d{8}$/;
 		
 		$request_parameters->{'merchantReferenceNumber'} = $merchant_reference_number;
@@ -162,7 +163,7 @@ sub retrieve
 	}
 	else
 	{
-		die 'Please provide either a request_id or the combination of a '
+		croak 'Please provide either a request_id or the combination of a '
 			. 'merchant_reference_number and target_date parameters';
 	}
 	
@@ -182,9 +183,9 @@ sub retrieve
 	);
 	
 	my $response = $user_agent->request( $request );
-	die "Could not get a response from CyberSource"
+	croak "Could not get a response from CyberSource"
 		unless defined $response;
-	die "CyberSource returned the following error: " . $response->status_line()
+	croak "CyberSource returned the following error: " . $response->status_line()
 		unless $response->is_success();
 	
 	return $response->content();
@@ -198,8 +199,8 @@ Guillaume Aubert, C<< <aubertg at cpan.org> >>.
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-business-cybersource-report-singletransaction at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=business-cybersource-report-singletransaction>.  I will be notified, and then you'll
+Please report any bugs or feature requests to C<bug-business-cybersource-report at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=business-cybersource-report>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 
@@ -207,7 +208,7 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-	perldoc Business::CyberSource::Reporting::XML::SingleTransaction
+	perldoc Business::CyberSource::Report::SingleTransaction
 
 
 You can also look for information at:
@@ -218,37 +219,39 @@ You can also look for information at:
 
 RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=business-cybersource-report-singletransaction>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=business-cybersource-report>
 
 =item *
 
 AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/business-cybersource-report-singletransaction>
+L<http://annocpan.org/dist/business-cybersource-report>
 
 =item *
 
 CPAN Ratings
 
-L<http://cpanratings.perl.org/d/business-cybersource-report-singletransaction>
+L<http://cpanratings.perl.org/d/business-cybersource-report>
 
 =item *
 
 Search CPAN
 
-L<http://search.cpan.org/dist/business-cybersource-report-singletransaction/>
+L<http://search.cpan.org/dist/business-cybersource-report/>
 
 =back
 
 
 =head1 ACKNOWLEDGEMENTS
 
-Thanks to Geeknet, Inc. L<http://www.geek.net> for funding the initial development of this code!
+Thanks to ThinkGeek (L<http://www.thinkgeek.com/>) and its corporate overlords
+at Geeknet (L<http://www.geek.net/>), for footing the bill while I eat pizza
+and write code for them!
 
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2011 Guillaume Aubert.
+Copyright 2011-2012 Guillaume Aubert.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the Artistic License.

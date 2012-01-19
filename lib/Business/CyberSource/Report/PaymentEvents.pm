@@ -5,6 +5,7 @@ use warnings;
 
 use base 'Business::CyberSource::Report';
 
+use Carp;
 use HTTP::Request::Common qw();
 use LWP::UserAgent qw();
 
@@ -17,11 +18,11 @@ Payment Events report.
 
 =head1 VERSION
 
-Version 1.1.1
+Version 1.1.2
 
 =cut
 
-our $VERSION = '1.1.1';
+our $VERSION = '1.1.2';
 
 our $TEST_URL = 'https://ebctest.cybersource.com/ebctest';
 our $PRODUCTION_URL = 'https://ebc.cybersource.com/ebc';
@@ -85,13 +86,13 @@ sub retrieve
 	my $date = delete( $args{'date'} );
 	
 	# Verify the format.
-	die "The format needs to be 'csv' or 'xml'"
+	croak "The format needs to be 'csv' or 'xml'"
 		unless defined( $format ) && ( $format =~ m/^(csv|xml)$/ );
 	
 	# Verify the date.
-	die 'You need to specify a date for the transactions to retrieve'
+	croak 'You need to specify a date for the transactions to retrieve'
 		unless defined( $date );
-	die 'The format for the date of the transactions to retrieve is YYYY/MM/DD'
+	croak 'The format for the date of the transactions to retrieve is YYYY/MM/DD'
 		unless $date =~ m/^\d{4}\/\d{2}\/\d{2}$/;
 	
 	# Prepare the URL to hit.
@@ -108,9 +109,9 @@ sub retrieve
 	);
 	
 	my $response = $user_agent->request( $request );
-	die "Could not get a response from CyberSource"
+	croak "Could not get a response from CyberSource"
 		unless defined $response;
-	die "CyberSource returned the following error: " . $response->status_line()
+	croak "CyberSource returned the following error: " . $response->status_line()
 		unless $response->is_success();
 	
 	return $response->content();
@@ -124,8 +125,8 @@ Guillaume Aubert, C<< <aubertg at cpan.org> >>.
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-business-cybersource-report-paymentevents at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=business-cybersource-report-paymentevents>.  I will be notified, and then you'll
+Please report any bugs or feature requests to C<bug-business-cybersource-report at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=business-cybersource-report>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 
@@ -133,7 +134,7 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-	perldoc Business::CyberSource::Reporting::XML::PaymentEvents
+	perldoc Business::CyberSource::Report::PaymentEvents
 
 
 You can also look for information at:
@@ -144,37 +145,39 @@ You can also look for information at:
 
 RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=business-cybersource-report-paymentevents>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=business-cybersource-report>
 
 =item *
 
 AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/business-cybersource-report-paymentevents>
+L<http://annocpan.org/dist/business-cybersource-report>
 
 =item *
 
 CPAN Ratings
 
-L<http://cpanratings.perl.org/d/business-cybersource-report-paymentevents>
+L<http://cpanratings.perl.org/d/business-cybersource-report>
 
 =item *
 
 Search CPAN
 
-L<http://search.cpan.org/dist/business-cybersource-report-paymentevents/>
+L<http://search.cpan.org/dist/business-cybersource-report/>
 
 =back
 
 
 =head1 ACKNOWLEDGEMENTS
 
-Thanks to Geeknet, Inc. L<http://www.geek.net> for funding the initial development of this code!
+Thanks to ThinkGeek (L<http://www.thinkgeek.com/>) and its corporate overlords
+at Geeknet (L<http://www.geek.net/>), for footing the bill while I eat pizza
+and write code for them!
 
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2011 Guillaume Aubert.
+Copyright 2011-2012 Guillaume Aubert.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the Artistic License.

@@ -3,6 +3,9 @@ package Business::CyberSource::Report;
 use strict;
 use warnings;
 
+use Carp;
+use Class::Load qw();
+use Storable qw();
 use XML::LibXML qw();
 use LWP::UserAgent qw();
 use HTTP::Request qw();
@@ -16,11 +19,11 @@ CyberSource's XML reports.
 
 =head1 VERSION
 
-Version 1.1.1
+Version 1.1.2
 
 =cut
 
-our $VERSION = '1.1.1';
+our $VERSION = '1.1.2';
 
 our $LOADED_REPORT_MODULES;
 
@@ -90,8 +93,8 @@ sub new
 	# Check for required arguments.
 	foreach my $arg ( qw( merchant_id password ) )
 	{
-		die "The parameter >$arg< is missing"
-			unless defined( $args{ $arg } ) && ( $args{ $arg } ne '' );
+		croak "The parameter >$arg< is missing"
+			if !defined( $args{ $arg } ) || ( $args{ $arg } eq '' );
 	}
 	
 	# By default per CyberSource's interface, the username is the merchant ID.
@@ -125,7 +128,7 @@ dynamically when calling build().
 
 =cut
 
-sub list_loaded()
+sub list_loaded
 {
 	my ( $self ) = @_;
 	
@@ -173,27 +176,25 @@ sub build
 {
 	my ( $self, $module ) = @_;
 	
-	die 'Please specify the name of the module to build'
-		unless defined( $module ) && ( $module ne '' );
+	croak 'Please specify the name of the module to build'
+		if !defined( $module ) || ( $module eq '' );
 	
 	my $class = __PACKAGE__ . '::' . $module;
 	
 	# If the module isn't already loaded, do that now.
 	if ( scalar( grep { $module eq $_ } @{ $self->list_loaded() || [] } ) == 0 )
 	{
-		eval "use $class; 1;" || die "Failed to load $class, double-check the class name";
+		Class::Load::load_optional_class( $class ) || croak "Failed to load $class, double-check the class name";
 		$LOADED_REPORT_MODULES->{ $module } = undef;
 	}
 	
 	my $object = bless(
-		{
-			# Create a copy of the factory's guts, the object will be a subclass of
-			# the factory and will be able to use all the information.
-			# Also, we don't want a change in the factory parameters to cascade to
-			# the objects previously built, so it makes sense to copy.
-			# TBD: copy only a selected subset of the content?
-			%$self,
-		},
+		# Create a copy of the factory's guts, the object will be a subclass of
+		# the factory and will be able to use all the information.
+		# Also, we don't want a change in the factory parameters to cascade to
+		# the objects previously built, so it makes sense to copy.
+		# TBD: copy only a selected subset of the content?
+		Storable::dclone( $self ),
 		$class,
 	);
 	
@@ -284,7 +285,7 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-	perldoc Business::CyberSource::Reporting::XML
+	perldoc Business::CyberSource::Report
 
 
 You can also look for information at:
@@ -320,12 +321,14 @@ L<http://search.cpan.org/dist/business-cybersource-report/>
 
 =head1 ACKNOWLEDGEMENTS
 
-Thanks to Geeknet, Inc. L<http://www.geek.net> for funding the initial development of this code!
+Thanks to ThinkGeek (L<http://www.thinkgeek.com/>) and its corporate overlords
+at Geeknet (L<http://www.geek.net/>), for footing the bill while I eat pizza
+and write code for them!
 
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2011 Guillaume Aubert.
+Copyright 2011-2012 Guillaume Aubert.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the Artistic License.
