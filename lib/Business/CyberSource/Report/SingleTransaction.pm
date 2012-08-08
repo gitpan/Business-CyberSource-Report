@@ -12,17 +12,16 @@ use LWP::UserAgent qw();
 
 =head1 NAME
 
-Business::CyberSource::Report::SingleTransaction - Interface to CyberSource's
-Single Transaction report.
+Business::CyberSource::Report::SingleTransaction - Interface to CyberSource's Single Transaction report.
 
 
 =head1 VERSION
 
-Version 1.1.3
+Version 1.1.4
 
 =cut
 
-our $VERSION = '1.1.3';
+our $VERSION = '1.1.4';
 
 our $TEST_URL = 'https://ebctest.cybersource.com/ebctest/Query';
 our $PRODUCTION_URL = 'https://ebc.cybersource.com/ebc/Query';
