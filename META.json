@@ -4,7 +4,7 @@
       "Guillaume Aubert <aubertg@cpan.org>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4, CPAN::Meta::Converter version 2.120530",
+   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "artistic_1"
    ],
@@ -41,15 +41,15 @@
    "provides" : {
       "Business::CyberSource::Report" : {
          "file" : "lib/Business/CyberSource/Report.pm",
-         "version" : "v1.1.4"
+         "version" : "v1.1.5"
       },
       "Business::CyberSource::Report::PaymentEvents" : {
          "file" : "lib/Business/CyberSource/Report/PaymentEvents.pm",
-         "version" : "v1.1.4"
+         "version" : "v1.1.5"
       },
       "Business::CyberSource::Report::SingleTransaction" : {
          "file" : "lib/Business/CyberSource/Report/SingleTransaction.pm",
-         "version" : "v1.1.4"
+         "version" : "v1.1.5"
       }
    },
    "release_status" : "stable",
@@ -62,8 +62,8 @@
          "http://www.perlfoundation.org/artistic_license_1_0"
       ],
       "repository" : {
-         "url" : "https://sourceforge.net/p/cybersourceperl/code"
+         "url" : "https://github.com/guillaumeaubert/Business-CyberSource-Report"
       }
    },
-   "version" : "v1.1.4"
+   "version" : "v1.1.5"
 }
