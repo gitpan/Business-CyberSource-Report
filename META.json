@@ -6,7 +6,7 @@
    "dynamic_config" : 1,
    "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921",
    "license" : [
-      "artistic_1"
+      "open_source"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -41,15 +41,15 @@
    "provides" : {
       "Business::CyberSource::Report" : {
          "file" : "lib/Business/CyberSource/Report.pm",
-         "version" : "v1.1.5"
+         "version" : "v1.1.6"
       },
       "Business::CyberSource::Report::PaymentEvents" : {
          "file" : "lib/Business/CyberSource/Report/PaymentEvents.pm",
-         "version" : "v1.1.5"
+         "version" : "v1.1.6"
       },
       "Business::CyberSource::Report::SingleTransaction" : {
          "file" : "lib/Business/CyberSource/Report/SingleTransaction.pm",
-         "version" : "v1.1.5"
+         "version" : "v1.1.6"
       }
    },
    "release_status" : "stable",
@@ -59,11 +59,11 @@
       },
       "homepage" : "https://metacpan.org/release/Business-CyberSource-Report",
       "license" : [
-         "http://www.perlfoundation.org/artistic_license_1_0"
+         "http://www.gnu.org/licenses/gpl-3.0.txt"
       ],
       "repository" : {
          "url" : "https://github.com/guillaumeaubert/Business-CyberSource-Report"
       }
    },
-   "version" : "v1.1.5"
+   "version" : "v1.1.6"
 }
