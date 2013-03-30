@@ -17,11 +17,11 @@ Business::CyberSource::Report::SingleTransaction - Interface to CyberSource's Si
 
 =head1 VERSION
 
-Version 1.1.6
+Version 1.1.7
 
 =cut
 
-our $VERSION = '1.1.6';
+our $VERSION = '1.1.7';
 
 our $TEST_URL = 'https://ebctest.cybersource.com/ebctest/Query';
 our $PRODUCTION_URL = 'https://ebc.cybersource.com/ebc/Query';
@@ -198,9 +198,10 @@ Guillaume Aubert, C<< <aubertg at cpan.org> >>.
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-business-cybersource-report at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=business-cybersource-report>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+Please report any bugs or feature requests through the web interface at
+L<https://github.com/guillaumeaubert/Business-CyberSource-Report/issues/new>.
+I will be notified, and then you'll automatically be notified of progress on
+your bug as I make changes.
 
 
 =head1 SUPPORT
@@ -216,9 +217,9 @@ You can also look for information at:
 
 =item *
 
-RT: CPAN's request tracker
+GitHub's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=business-cybersource-report>
+L<https://github.com/guillaumeaubert/Business-CyberSource-Report/issues>
 
 =item *
 
@@ -234,9 +235,9 @@ L<http://cpanratings.perl.org/d/business-cybersource-report>
 
 =item *
 
-Search CPAN
+MetaCPAN
 
-L<http://search.cpan.org/dist/business-cybersource-report/>
+L<https://metacpan.org/release/Business-CyberSource-Report>
 
 =back
 
@@ -250,7 +251,7 @@ and write code for them!
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2011-2012 Guillaume Aubert.
+Copyright 2011-2013 Guillaume Aubert.
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License version 3 as published by the Free
