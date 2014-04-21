@@ -13,22 +13,22 @@ my $class = Module::Build->subclass(
 		sub ACTION_test
 		{
 			my ( $self ) = @_;
-			
+
 			$self->recursive_test_files(1);
-			
+
 			$self->test_files( 't', 'xt' )
 				if $ENV{'RELEASE_TESTING'};
-			
+
 			return $self->SUPER::ACTION_test();
 		}
-		
+
 		# Force running extended tests when testing the distribution.
 		sub ACTION_disttest
 		{
 			my ( $self ) = @_;
-			
+
 			local $ENV{ RELEASE_TESTING } = 1;
-			
+
 			return $self->SUPER::ACTION_disttest();
 		}
 	|,
@@ -43,8 +43,9 @@ my $builder = $class->new(
 	{
 		'Scalar::Util'          => 0,
 		'Test::Exception'       => 0,
-		'Test::More'            => 0.94,
 		'Test::FailWarnings'    => 0,
+		'Test::LWP::UserAgent'  => 0,
+		'Test::More'            => 0.94,
 	},
 	requires             =>
 	{

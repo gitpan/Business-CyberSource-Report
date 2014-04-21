@@ -17,11 +17,11 @@ Business::CyberSource::Report::PaymentEvents - Interface to CyberSource's Paymen
 
 =head1 VERSION
 
-Version 1.1.7
+Version 1.1.8
 
 =cut
 
-our $VERSION = '1.1.7';
+our $VERSION = '1.1.8';
 
 our $TEST_URL = 'https://ebctest.cybersource.com/ebctest';
 our $PRODUCTION_URL = 'https://ebc.cybersource.com/ebc';
@@ -32,17 +32,17 @@ our $PRODUCTION_URL = 'https://ebc.cybersource.com/ebc';
 This module is an interface to the Payment Events report from CyberSource.
 
 	use Business::CyberSource::Report;
-	
+
 	# Generate a report factory.
 	my $report_factory = Business::CyberSource::Report->new(
 		merchant_id => $merchant_id,
 		username    => $username,
 		password    => $password,
 	);
-	
+
 	# Build a Business::CyberSource::Report::PaymentEvents object.
 	my $payment_events_report = $report_factory->build( 'PaymentEvents' );
-	
+
 	# Retrieve the Payment Events report for a given date.
 	$payment_events_report->retrieve(
 		format => $format,
@@ -66,13 +66,19 @@ Parameters:
 
 =over
 
-=item *
+=item * format (mandatory)
 
-format: the desired format of the report, 'csv' or 'xml'.
+The desired format of the report, 'csv' or 'xml'.
 
-=item *
+=item * date (mandatory)
 
-date: the date of the transactions to include in the report, using the format YYYY/MM/DD.
+The date of the transactions to include in the report, using the format
+YYYY/MM/DD.
+
+=item * user_agent (optional)
+
+By default, C<LWP::UserAgent>. This is useful for tests, see the documentation
+for L<Test::LWP::UserAgent> in particular.
 
 =back
 
@@ -83,43 +89,38 @@ sub retrieve
 	my ( $self, %args ) = @_;
 	my $format = delete( $args{'format'} );
 	my $date = delete( $args{'date'} );
-	
+	my $user_agent = delete( $args{'user_agent'} ) || LWP::UserAgent->new();
+
 	# Verify the format.
 	croak "The format needs to be 'csv' or 'xml'"
 		unless defined( $format ) && ( $format =~ m/^(csv|xml)$/ );
-	
+
 	# Verify the date.
 	croak 'You need to specify a date for the transactions to retrieve'
 		unless defined( $date );
 	croak 'The format for the date of the transactions to retrieve is YYYY/MM/DD'
 		unless $date =~ m/^\d{4}\/\d{2}\/\d{2}$/;
-	
+
 	# Prepare the URL to hit.
 	my $url = ( $self->use_production_system() ? $PRODUCTION_URL : $TEST_URL )
 		. '/DownloadReport/' . $date . '/' . $self->get_merchant_id()
 		. '/PaymentEventsReport.' . $format;
-	
+
 	# Send the query.
-	my $user_agent = LWP::UserAgent->new();
 	my $request = HTTP::Request::Common::GET( $url );
 	$request->authorization_basic(
 		$self->get_username(),
 		$self->get_password(),
 	);
-	
+
 	my $response = $user_agent->request( $request );
 	croak "Could not get a response from CyberSource"
 		unless defined $response;
 	croak "CyberSource returned the following error: " . $response->status_line()
 		unless $response->is_success();
-	
+
 	return $response->content();
 }
-
-
-=head1 AUTHOR
-
-Guillaume Aubert, C<< <aubertg at cpan.org> >>.
 
 
 =head1 BUGS
@@ -168,16 +169,20 @@ L<https://metacpan.org/release/Business-CyberSource-Report>
 =back
 
 
+=head1 AUTHOR
+
+L<Guillaume Aubert|https://metacpan.org/author/AUBERTG>, C<< <aubertg at cpan.org> >>.
+
+
 =head1 ACKNOWLEDGEMENTS
 
-Thanks to ThinkGeek (L<http://www.thinkgeek.com/>) and its corporate overlords
-at Geeknet (L<http://www.geek.net/>), for footing the bill while I eat pizza
-and write code for them!
+I originally developed this project for ThinkGeek
+(L<http://www.thinkgeek.com/>). Thanks for allowing me to open-source it!
 
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2011-2013 Guillaume Aubert.
+Copyright 2011-2014 Guillaume Aubert.
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License version 3 as published by the Free
